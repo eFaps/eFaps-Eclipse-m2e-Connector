@@ -54,11 +54,9 @@ public class EFapsBuildParticipant
                                final IProgressMonitor monitor)
         throws Exception
     {
+        final Set<IProject> result = super.build(kind, monitor);
         final IMaven maven = MavenPlugin.getMaven();
         final BuildContext buildContext = getBuildContext();
-
-        // execute mojo
-        final Set<IProject> result = super.build(kind, monitor);
 
         // tell m2e builder to refresh generated files
         final File generated = maven.getMojoParameterValue(getSession(), getMojoExecution(), "outputDirectory",

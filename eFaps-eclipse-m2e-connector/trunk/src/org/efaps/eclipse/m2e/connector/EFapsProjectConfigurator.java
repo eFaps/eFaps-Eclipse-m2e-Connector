@@ -26,6 +26,7 @@ import org.apache.maven.plugin.MojoExecution;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.m2e.core.lifecyclemapping.model.IPluginExecutionMetadata;
@@ -75,6 +76,19 @@ public class EFapsProjectConfigurator
             final Path path = new Path(project.getFullPath().toString() + File.separator + dir);
             if (!classpath.containsPath(path)) {
                 classpath.addSourceEntry(path, facade.getOutputLocation(), true);
+            }
+        }
+
+        for (final MojoExecution mojoExecution : getMojoExecutions(request, monitor)) {
+            final File generated = this.maven.getMojoParameterValue(request.getMavenSession(), mojoExecution,
+                            "outputDirectory", File.class);
+            if (generated != null) {
+                IPath path = Path.fromOSString(generated.getPath());
+                path = path.makeRelativeTo(new Path(facade.getPomFile().getParent().toString())).makeAbsolute();
+                path = new Path(project.getFullPath().toString() + path);
+                if (!classpath.containsPath(path)) {
+                    classpath.addSourceEntry(path, facade.getOutputLocation(), true);
+                }
             }
         }
     }
