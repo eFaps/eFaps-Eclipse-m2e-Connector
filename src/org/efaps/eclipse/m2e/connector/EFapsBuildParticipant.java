@@ -1,5 +1,5 @@
 /*
- * Copyright 2003 - 2011 The eFaps Team
+ * Copyright 2003 - 2012 The eFaps Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,11 +50,11 @@ public class EFapsBuildParticipant
     }
 
     @Override
-    public Set<IProject> build(final int kind,
-                               final IProgressMonitor monitor)
+    public Set<IProject> build(final int _kind,
+                               final IProgressMonitor _monitor)
         throws Exception
     {
-        final Set<IProject> result = super.build(kind, monitor);
+        final Set<IProject> result = super.build(_kind, _monitor);
         final IMaven maven = MavenPlugin.getMaven();
         final BuildContext buildContext = getBuildContext();
 
