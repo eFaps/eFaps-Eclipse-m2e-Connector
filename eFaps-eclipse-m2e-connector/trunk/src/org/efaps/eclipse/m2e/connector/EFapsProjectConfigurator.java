@@ -55,13 +55,13 @@ public class EFapsProjectConfigurator
     }
 
     @Override
-    public void configureRawClasspath(final ProjectConfigurationRequest request,
-                                      final IClasspathDescriptor classpath,
-                                      final IProgressMonitor monitor)
+    public void configureRawClasspath(final ProjectConfigurationRequest _request,
+                                      final IClasspathDescriptor _classpath,
+                                      final IProgressMonitor _monitor)
         throws CoreException
     {
-        final IProject project = request.getProject();
-        final IMavenProjectFacade facade = request.getMavenProjectFacade();
+        final IProject project = _request.getProject();
+        final IMavenProjectFacade facade = _request.getMavenProjectFacade();
         // search for folder that are in the src folder and are named "ESJP" and add them to the classpath
         final DirectoryScanner ds = new DirectoryScanner();
         final String[] includes = new String[] { "**src\\**\\ESJP" };
@@ -74,20 +74,20 @@ public class EFapsProjectConfigurator
         final String[] dirs = ds.getIncludedDirectories();
         for (final String dir : dirs) {
             final Path path = new Path(project.getFullPath().toString() + File.separator + dir);
-            if (!classpath.containsPath(path)) {
-                classpath.addSourceEntry(path, facade.getOutputLocation(), true);
+            if (!_classpath.containsPath(path)) {
+                _classpath.addSourceEntry(path, facade.getOutputLocation(), true);
             }
         }
 
-        for (final MojoExecution mojoExecution : getMojoExecutions(request, monitor)) {
-            final File generated = this.maven.getMojoParameterValue(request.getMavenSession(), mojoExecution,
+        for (final MojoExecution mojoExecution : getMojoExecutions(_request, _monitor)) {
+            final File generated = this.maven.getMojoParameterValue(_request.getMavenSession(), mojoExecution,
                             "outputDirectory", File.class);
             if (generated != null) {
                 IPath path = Path.fromOSString(generated.getPath());
                 path = path.makeRelativeTo(new Path(facade.getPomFile().getParent().toString())).makeAbsolute();
                 path = new Path(project.getFullPath().toString() + path);
-                if (!classpath.containsPath(path)) {
-                    classpath.addSourceEntry(path, facade.getOutputLocation(), true);
+                if (!_classpath.containsPath(path)) {
+                    _classpath.addSourceEntry(path, facade.getOutputLocation(), true);
                 }
             }
         }
